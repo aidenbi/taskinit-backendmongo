@@ -28,4 +28,4 @@ mongoose.connect(process.env.DB_CONNECTION, { useNewUrlParser: true }, () =>
 );
 
 //How do we start listening to the server
-app.listen(3000);
+app.listen(process.env.PORT || 3000);
