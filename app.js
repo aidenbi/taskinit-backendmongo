@@ -14,9 +14,9 @@ app.use(express.json());
 //Import Routes
 const tasksRoute = require('./routes/tasks');
 const followingRoute = require('./routes/following');
-const authRoute = require('./routes/auth')
+const authRoute = require('./routes/auth');
 
-app.use('/api/user', authRoute)
+app.use('/api/user', authRoute);
 app.use('/tasks', tasksRoute);
 app.use('/following', followingRoute);
 
