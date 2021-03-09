@@ -1,11 +1,11 @@
 const express = require('express');
 const router = express.Router();
-const Task = require('../models/Task')
-
+const Task = require('../models/Task');
+const verify = require('./verifyToken');
 
 
 //GETS BACK ALL THE POSTS
-router.get('/', async (req, res) => {
+router.get('/', verify, async (req, res) => {
     try {
         const tasks = await Task.find();
         res.json(tasks);
