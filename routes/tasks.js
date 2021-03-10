@@ -1,28 +1,28 @@
 const express = require('express');
 const router = express.Router();
 const Task = require('../models/Task');
-const verify = require('./verifyToken');
+const { validateCookie } = require('./auth')
 
-
-//GETS BACK ALL THE POSTS
-router.get('/', verify, async (req, res) => {
+//GETS BACK ALL THE TASKS
+router.get('/', validateCookie, async (req, res) => {
     try {
-        const tasks = await Task.find();
+        console.log(res.locals.userid)
+        const tasks = await Task.find({ UserID: res.locals.userid });
         res.json(tasks);
     } catch (err) {
         res.json({ message: err });
     }
 });
 
-//SUBMITS A POST
-router.post('/', async (req, res) => {
+//SUBMITS A TASK
+router.post('/', validateCookie, async (req, res) => {
     const task = new Task({
         text: req.body.text,
         day: req.body.day,
         reminder: req.body.reminder,
         Difficulty: req.body.Difficulty,
         Completion: req.body.Completion,
-        Username: req.body.Username
+        UserID: res.locals.userid
     });
 
     try {
@@ -34,7 +34,7 @@ router.post('/', async (req, res) => {
 });
 
 
-//SPECIFIC POST
+//SPECIFIC TASK
 router.get('/:taskId', async (req, res) => {
     try {
         const task = await Task.findById(req.params.taskId);
@@ -45,6 +45,7 @@ router.get('/:taskId', async (req, res) => {
 });
 
 //Delete specific post
+// TODO make delete request user specific
 router.delete('/:taskId', async (req, res) => {
     try {
         const removedTask = await Task.remove({ _id: req.params.taskId });

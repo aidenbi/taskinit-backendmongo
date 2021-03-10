@@ -6,6 +6,26 @@ const jwt = require('jsonwebtoken');
 
 
 
+
+
+function validateCookie(req, res, next) {
+    const cookies = req.cookies;
+
+    console.log(cookies)
+    if ('session_id' in cookies) {
+        try {
+            const userid = jwt.verify(cookies.session_id, process.env.TOKEN_SECRET)._id
+            console.log(userid)
+            res.locals.userid = userid
+            next();
+        } catch {
+            res.status(403).send({ msg: 'Not Authenticated' })
+        }
+
+    } else {
+        res.status(403).send({ msg: 'Not Authenticated' })
+    }
+}
 router.post('/register', async (req, res) => {
     //validate
     const { error } = registerValidation(req.body);
@@ -15,7 +35,7 @@ router.post('/register', async (req, res) => {
     if (nameExist) return res.status(400).send('Name already exists');
 
     //hash pasword
-    const salt = await bcrypt.gentSalt(10);
+    const salt = await bcrypt.genSalt(10);
     const hashPassword = await bcrypt.hash(req.body.password, salt);
 
 
@@ -25,8 +45,8 @@ router.post('/register', async (req, res) => {
         password: hashPassword
     });
     try {
-        const savedUser = await user.save()
-        res.send({ user: user._id });
+        await user.save()
+        res.send('Congratulations, you have made an account!')
     } catch (err) {
         res.status(400).send(err);
     }
@@ -48,9 +68,10 @@ router.post('/login', async (req, res) => {
 
     //create and assign token
     const token = jwt.sign({ _id: user._id }, process.env.TOKEN_SECRET)
-    res.header('auth-token', token).send(token);
 
-
+    res.cookie('session_id', token)
+    res.status(200).json({ msg: 'logged in' })
 
 });
 module.exports = router;
+module.exports.validateCookie = validateCookie;

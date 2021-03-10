@@ -17,14 +17,14 @@ const TaskSchema = mongoose.Schema({
         type: Number,
         required: true
     },
-    Username: {
-        type: String,
-        required: true
-    },
     Completion: {
         type: Boolean,
         default: false
     },
+    UserID: {
+        type: String,
+        required: true
+    }
 });
 
 
