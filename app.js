@@ -5,13 +5,12 @@ const bodyParser = require('body-parser');
 require('dotenv/config');
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
-const cors = require('cors');
+
 
 //Middlewares
 app.use(cors());
 app.use(express.json());
 app.use(cookieParser());
-app.use(cors());
 
 //Import Routes
 const tasksRoute = require('./routes/tasks');
