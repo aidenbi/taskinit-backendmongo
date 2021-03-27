@@ -49,7 +49,7 @@ router.get('/:taskId', async (req, res) => {
 // TODO make delete request user specific
 router.delete('/:taskId', async (req, res) => {
     try {
-        const removedTask = await db.inventory.deleteOne({ _id: req.params.taskId });
+        const removedTask = await Task.deleteOne({ _id: req.params.taskId });
         res.json(removedTask)
     } catch (err) {
         res.json({ message: err });
