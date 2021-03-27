@@ -8,7 +8,7 @@ const cookieParser = require('cookie-parser');
 
 
 //Middlewares
-app.use(cors({ credentials: true, origin: "https://taskinit-backendmangodb.herokuapp.com/" }));
+app.use(cors({ credentials: true, origin: "https://taskinit.herokuapp.com/" }));
 app.use(express.json());
 app.use(cookieParser());
 
