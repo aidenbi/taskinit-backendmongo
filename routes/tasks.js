@@ -1,4 +1,5 @@
 const express = require('express');
+const { db } = require('../models/Task');
 const router = express.Router();
 const Task = require('../models/Task');
 const { validateCookie } = require('./auth')
@@ -48,7 +49,7 @@ router.get('/:taskId', async (req, res) => {
 // TODO make delete request user specific
 router.delete('/:taskId', async (req, res) => {
     try {
-        const removedTask = await Task.remove({ _id: req.params.taskId });
+        const removedTask = await db.inventory.deleteOne({ _id: req.params.taskId });
         res.json(removedTask)
     } catch (err) {
         res.json({ message: err });
