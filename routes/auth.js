@@ -63,14 +63,19 @@ router.post('/login', async (req, res) => {
     if (!user) return res.status(400).send('Name or password is wrong');
     //pass is correct
     const validPass = await bcrypt.compare(req.body.password, user.password);
-    if (!validPass) return res.status(400).send('Name or password is wrong')
+    if (validPass) {
+        //create and assign token
+        const token = jwt.sign({ _id: user._id }, process.env.TOKEN_SECRET)
+
+        res.cookie('session_id', token, { sameSite: 'none', secure: true, expires: false })
+        res.status(200).json({ msg: 'logged in' })
+    }
+    else { res.status(400).send('Name or password is wrong') }
 
 
-    //create and assign token
-    const token = jwt.sign({ _id: user._id }, process.env.TOKEN_SECRET)
 
-    res.cookie('session_id', token, { sameSite: 'none', secure: true, expires: false })
-    res.status(200).json({ msg: 'logged in' })
+
+
 
 });
 module.exports = router;
