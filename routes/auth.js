@@ -32,7 +32,7 @@ router.post('/register', async (req, res) => {
     if (error) return res.status(400).send(error.details[0].message);
     //check user if already in database
     const nameExist = await User.findOne({ name: req.body.name });
-    if (nameExist) return res.status(400).send({ msg: 'Name already exists' });
+    if (nameExist) return res.status(200).send({ msg: 'Name already exists' });
 
     //hash pasword
     const salt = await bcrypt.genSalt(10);
