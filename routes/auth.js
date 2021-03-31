@@ -67,7 +67,7 @@ router.post('/login', async (req, res) => {
         //create and assign token
         const token = jwt.sign({ _id: user._id }, process.env.TOKEN_SECRET)
 
-        res.cookie('session_id', token, { sameSite: 'none', secure: true, httpOnly: false })
+        res.cookie('session_id', token, { sameSite: 'none', secure: true, httpOnly: false, maxAge: 900000 })
         res.status(200).send({ msg: 'logged in' })
     }
     else { res.status(400).send({ msg: 'Name or password is wrong' }) }
