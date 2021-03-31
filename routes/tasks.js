@@ -11,7 +11,7 @@ router.get('/', validateCookie, async (req, res) => {
         const tasks = await Task.find({ UserID: res.locals.userid });
         res.json(tasks);
     } catch (err) {
-        res.json({ message: err });
+        res.json({ msg: err });
     }
 });
 
@@ -30,7 +30,7 @@ router.post('/', validateCookie, async (req, res) => {
         const savedTask = await task.save()
         res.json(savedTask)
     } catch (err) {
-        res.json({ message: err });
+        res.json({ msg: err });
     }
 });
 
@@ -41,7 +41,7 @@ router.get('/:taskId', async (req, res) => {
         const task = await Task.findById(req.params.taskId);
         res.json(task);
     } catch (err) {
-        res.json({ message: err });
+        res.json({ msg: err });
     }
 });
 
@@ -52,7 +52,7 @@ router.delete('/:taskId', async (req, res) => {
         const removedTask = await Task.deleteOne({ _id: req.params.taskId });
         res.json(removedTask)
     } catch (err) {
-        res.json({ message: err });
+        res.json({ msg: err });
     }
 });
 
@@ -71,7 +71,7 @@ router.patch('/:taskId', async (req, res) => {
         })
         res.json(updatedTask);
     } catch (err) {
-        res.json({ message: err });
+        res.json({ msg: err });
     }
 })
 
