@@ -55,10 +55,13 @@ router.post('/register', async (req, res) => {
 
 //logout
 router.get('/logout', async (req, res) => {
-    res.cookie('session_id', token, { sameSite: 'none', secure: true, maxAge: 1 })
-    res.send({ msg: 'Logged out' })
-}
-)
+    try {
+        res.cookie('session_id', token, { sameSite: 'none', secure: true, maxAge: 1 })
+        res.send({ msg: 'Logged out' })
+    } catch (err) {
+        res.json({ msg: err });
+    }
+})
 
 //login
 router.post('/login', async (req, res) => {
