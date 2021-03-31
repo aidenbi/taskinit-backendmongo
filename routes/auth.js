@@ -29,10 +29,10 @@ function validateCookie(req, res, next) {
 router.post('/register', async (req, res) => {
     //validate
     const { error } = registerValidation(req.body);
-    if (error) return res.status(400).send(error.details[0].message);
+    if (error) return res.status(400).send({ msg: error.details[0].message });
     //check user if already in database
     const nameExist = await User.findOne({ name: req.body.name });
-    if (nameExist) return res.status(400).json({ msg: 'Name already exists' });
+    if (nameExist) return res.status(400).send({ msg: 'Name already exists' });
 
     //hash pasword
     const salt = await bcrypt.genSalt(10);
@@ -46,9 +46,9 @@ router.post('/register', async (req, res) => {
     });
     try {
         await user.save()
-        res.send('Congratulations, you have made an account!')
+        res.send({ msg: 'Congratulations, you have made an account!' })
     } catch (err) {
-        res.status(400).send(err);
+        res.status(400).send({ msg: err });
     }
 });
 
@@ -57,10 +57,10 @@ router.post('/register', async (req, res) => {
 router.post('/login', async (req, res) => {
     //validate
     const { error } = loginValidation(req.body);
-    if (error) return res.status(400).send(error.details[0].message);
+    if (error) return res.status(400).send({ msg: error.details[0].message });
     //check if name exists
     const user = await User.findOne({ name: req.body.name });
-    if (!user) return res.status(400).send('Name or password is wrong');
+    if (!user) return res.status(400).send({ msg: 'Name or password is wrong' });
     //pass is correct
     const validPass = await bcrypt.compare(req.body.password, user.password);
     if (validPass === true) {
@@ -68,9 +68,9 @@ router.post('/login', async (req, res) => {
         const token = jwt.sign({ _id: user._id }, process.env.TOKEN_SECRET)
 
         res.cookie('session_id', token, { sameSite: 'none', secure: true, httpOnly: false })
-        res.status(200).json({ msg: 'logged in' })
+        res.status(200).send({ msg: 'logged in' })
     }
-    else { res.status(400).send('Name or password is wrong') }
+    else { res.status(400).send({ msg: 'Name or password is wrong' }) }
 
 
 
