@@ -6,6 +6,9 @@ const { validateCookie } = require('./auth')
 
 //GETS BACK ALL THE TASKS
 router.get('/', validateCookie, async (req, res) => {
+    if (req.protocol == 'http') {
+        res.redirect('https://taskinit.herokuapp.com/');
+    }
     try {
         console.log(res.locals.userid)
         const tasks = await Task.find({ UserID: res.locals.userid });
