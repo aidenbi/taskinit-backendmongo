@@ -25,9 +25,8 @@ app.use('/following', followingRoute);
 
 //ROUTES
 app.get('/', function (req, res, next) {
-    if (req.protocol == 'http') {
-        res.redirect('https://' +
-            req.get('host') + req.originalUrl);
+    if (req.protocol === 'http') {
+        res.redirect('https://taskinit.herokuapp.com/');
     }
 });
 
