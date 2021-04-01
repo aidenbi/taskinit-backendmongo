@@ -24,8 +24,11 @@ app.use('/following', followingRoute);
 
 
 //ROUTES
-app.get('/', (req, res) => {
-    res.send('We are on home');
+app.get('/', function (req, res, next) {
+    if (req.protocol == 'http') {
+        res.redirect('https://' +
+            req.get('host') + req.originalUrl);
+    }
 });
 
 
