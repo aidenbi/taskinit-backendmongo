@@ -6,12 +6,9 @@ const jwt = require('jsonwebtoken');
 
 
 
-
-
 function validateCookie(req, res, next) {
     const cookies = req.cookies;
 
-    console.log(cookies)
     if ('session_id' in cookies) {
         try {
             const userid = jwt.verify(cookies.session_id, process.env.TOKEN_SECRET)._id

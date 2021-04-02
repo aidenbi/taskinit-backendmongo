@@ -1,15 +1,14 @@
 const mongoose = require('mongoose');
 
 const FollowSchema = mongoose.Schema({
-    following: {
+    Following: {
         type: String,
         required: true
     },
-    Username: {
+    UserID: {
         type: String,
         required: true
     }
-
 });
 
 

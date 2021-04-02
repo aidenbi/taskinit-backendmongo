@@ -8,7 +8,7 @@ const cookieParser = require('cookie-parser');
 
 
 //Middlewares
-app.use(cors({ credentials: true, origin: "http://localhost:3000" }));
+app.use(cors({ credentials: true, origin: "https://taskinit.herokuapp.com" }));
 app.use(express.json());
 app.use(cookieParser());
 
@@ -24,11 +24,9 @@ app.use('/following', followingRoute);
 
 
 //ROUTES
-// app.get('/', function (req, res, next) {
-//     if (req.protocol === 'http') {
-//         res.redirect('https://taskinit.herokuapp.com');
-//     }
-// });
+app.get('/', (req, res) => {
+    res.send('hello')
+});
 
 
 

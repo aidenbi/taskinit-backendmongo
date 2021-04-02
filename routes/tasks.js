@@ -2,6 +2,7 @@ const express = require('express');
 const { db } = require('../models/Task');
 const router = express.Router();
 const Task = require('../models/Task');
+const User = require('../models/User');
 const { validateCookie } = require('./auth')
 
 //GETS BACK ALL THE TASKS
@@ -15,6 +16,8 @@ router.get('/', validateCookie, async (req, res) => {
         res.json({ msg: err });
     }
 });
+
+
 
 //SUBMITS A TASK
 router.post('/', validateCookie, async (req, res) => {
@@ -41,6 +44,19 @@ router.get('/:taskId', async (req, res) => {
     try {
         const task = await Task.findById(req.params.taskId);
         res.json(task);
+    } catch (err) {
+        res.json({ msg: err });
+    }
+});
+
+//GETS BACK TARGET USER TASKS
+router.get('/tartasks/:follow', validateCookie, async (req, res) => {
+
+    const tarUser = await User.findOne({ name: req.params.follow })
+    console.log(tarUser)
+    try {
+        const tasks = await Task.find({ UserID: tarUser._id });
+        res.json(tasks);
     } catch (err) {
         res.json({ msg: err });
     }
