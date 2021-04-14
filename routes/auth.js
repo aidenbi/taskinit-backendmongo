@@ -6,7 +6,7 @@ const jwt = require('jsonwebtoken');
 
 
 
-function validateCookie(req, res, next) {
+async function validateCookie(req, res, next) {
     const cookies = req.cookies;
 
     if ('session_id' in cookies) {
@@ -14,6 +14,8 @@ function validateCookie(req, res, next) {
             const userid = jwt.verify(cookies.session_id, process.env.TOKEN_SECRET)._id
             console.log(userid)
             res.locals.userid = userid
+            const userinfo = await User.findOne({ _id: userid });
+            res.locals.username = userinfo.name
             next();
         } catch {
             res.status(403).send({ msg: 'Not Authenticated' })
@@ -62,22 +64,31 @@ router.get('/logout', async (req, res) => {
 
 //login
 router.post('/login', async (req, res) => {
-    //validate
-    const { error } = loginValidation(req.body);
-    if (error) return res.status(400).send({ msg: error.details[0].message });
-    //check if name exists
-    const user = await User.findOne({ name: req.body.name });
-    if (!user) return res.status(400).send({ msg: 'Name or password is wrong' });
-    //pass is correct
-    const validPass = await bcrypt.compare(req.body.password, user.password);
-    if (validPass === true) {
-        //create and assign token
-        const token = jwt.sign({ _id: user._id }, process.env.TOKEN_SECRET)
-
-        res.cookie('session_id', token, { sameSite: 'none', secure: true, maxAge: 900000 })
-        res.status(200).send({ msg: 'logged in' })
+    const cookies = req.cookies;
+    const logincred = req.body
+    if ('session_id' in cookies) {
+        const userid = jwt.verify(cookies.session_id, process.env.TOKEN_SECRET)._id
+        const userinfo = await User.findOne({ _id: userid });
+        return res.status(200).json(userinfo.name)
     }
-    else { res.status(400).send({ msg: 'Name or password is wrong' }) }
+    console.log(req.body)
+    if ('name' in logincred && 'password' in logincred) {
+        //validate
+        const { error } = loginValidation(req.body);
+        if (error) return res.status(400).send({ msg: error.details[0].message });
+        //check if name exists
+        const user = await User.findOne({ name: req.body.name });
+        if (!user) return res.status(400).send({ msg: 'Name or password is wrong' });
+        //pass is correct
+        const validPass = await bcrypt.compare(req.body.password, user.password);
+        if (validPass === true) {
+            //create and assign token
+            const token = jwt.sign({ _id: user._id }, process.env.TOKEN_SECRET)
+            res.cookie('session_id', token, { sameSite: 'none', secure: true, maxAge: 900000 })
+            res.status(200).json(user.name)
+        }
+        else { res.status(400).send({ msg: 'Name or password is wrong' }) }
+    }
 
 
 
