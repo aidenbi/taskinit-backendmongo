@@ -64,8 +64,10 @@ router.get('/tartasks/:follow', validateCookie, async (req, res) => {
 
 //Delete specific post
 // TODO make delete request user specific
-router.delete('/:taskId', async (req, res) => {
+router.delete('/:taskId', validateCookie, async (req, res) => {
     try {
+        const tartask = await Task.findOne({ _id: req.params.taskId });
+        if (tartask.userid !== res.locals.userid) return res.status(403).json("not authenticated")
         const removedTask = await Task.deleteOne({ _id: req.params.taskId });
         res.json(removedTask)
     } catch (err) {
@@ -74,8 +76,10 @@ router.delete('/:taskId', async (req, res) => {
 });
 
 //updates a post
-router.patch('/:taskId', async (req, res) => {
+router.patch('/:taskId', validateCookie, async (req, res) => {
     try {
+        const tartask = await Task.findOne({ _id: req.params.taskId });
+        if (tartask.userid !== res.locals.userid) return res.status(403).json("not authenticated")
         const updatedTask = await Task.updateOne({ _id: req.params.taskId }, {
             $set: {
                 text: req.body.text,
