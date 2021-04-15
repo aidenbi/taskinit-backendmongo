@@ -12,17 +12,20 @@ async function validateCookie(req, res, next) {
     if ('session_id' in cookies) {
         try {
             const userid = jwt.verify(cookies.session_id, process.env.TOKEN_SECRET)._id
-            console.log(userid)
             res.locals.userid = userid
             const userinfo = await User.findOne({ _id: userid });
             res.locals.username = userinfo.name
             next();
         } catch {
+            console.log(1)
             res.status(403).send({ msg: 'Not Authenticated' })
+
         }
 
     } else {
+        console.log(2)
         res.status(403).send({ msg: 'Not Authenticated' })
+
     }
 }
 router.post('/register', async (req, res) => {
@@ -71,7 +74,6 @@ router.post('/login', async (req, res) => {
         const userinfo = await User.findOne({ _id: userid });
         return res.status(200).json(userinfo.name)
     }
-    console.log(req.body)
     if ('name' in logincred && 'password' in logincred) {
         //validate
         const { error } = loginValidation(req.body);

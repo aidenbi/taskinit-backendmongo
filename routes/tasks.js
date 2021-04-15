@@ -9,7 +9,6 @@ const { validateCookie } = require('./auth')
 router.get('/', validateCookie, async (req, res) => {
 
     try {
-        console.log(res.locals.userid)
         const tasks = await Task.find({ UserID: res.locals.userid });
         res.json(tasks);
     } catch (err) {
@@ -53,7 +52,6 @@ router.get('/:taskId', async (req, res) => {
 router.get('/tartasks/:follow', validateCookie, async (req, res) => {
 
     const tarUser = await User.findOne({ name: req.params.follow })
-    console.log(tarUser)
     try {
         const tasks = await Task.find({ UserID: tarUser._id });
         res.json(tasks);
@@ -79,7 +77,9 @@ router.delete('/:taskId', validateCookie, async (req, res) => {
 router.patch('/:taskId', validateCookie, async (req, res) => {
     try {
         const tartask = await Task.findOne({ _id: req.params.taskId });
+        console.log(tartask.UserID)
         if (tartask.UserID !== res.locals.userid) return res.status(403).json("not authenticated")
+
         const updatedTask = await Task.updateOne({ _id: req.params.taskId }, {
             $set: {
                 text: req.body.text,
