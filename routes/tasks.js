@@ -25,6 +25,7 @@ router.post('/', validateCookie, async (req, res) => {
         day: req.body.day,
         reminder: req.body.reminder,
         Difficulty: req.body.Difficulty,
+        Private: req.body.Private,
         Completion: req.body.Completion,
         UserID: res.locals.userid
     });
@@ -53,7 +54,7 @@ router.get('/tartasks/:follow', validateCookie, async (req, res) => {
 
     const tarUser = await User.findOne({ name: req.params.follow })
     try {
-        const tasks = await Task.find({ UserID: tarUser._id });
+        const tasks = await Task.find({ UserID: tarUser._id, Private: false });
         res.json(tasks);
     } catch (err) {
         res.json({ msg: err });
@@ -87,6 +88,7 @@ router.patch('/:taskId', validateCookie, async (req, res) => {
                 reminder: req.body.reminder,
                 Difficulty: req.body.Difficulty,
                 Completion: req.body.Completion,
+                Private: req.body.Private,
                 Username: req.body.Username
             }
         })

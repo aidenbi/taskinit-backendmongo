@@ -24,7 +24,11 @@ const TaskSchema = mongoose.Schema({
     UserID: {
         type: String,
         required: true
-    }
+    },
+    Private: {
+        type: Boolean,
+        default: false
+    },
 });
 
 
