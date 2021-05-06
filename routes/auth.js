@@ -27,7 +27,6 @@ async function validateCookie(req, res, next) {
     }
 }
 router.post('/register', async (req, res) => {
-    console.log(req.body)
     //validate
     const { error } = registerValidation(req.body);
     if (error) return res.status(400).send({ msg: error.details[0].message });
