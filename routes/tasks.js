@@ -26,6 +26,7 @@ router.post('/', validateCookie, async (req, res) => {
         reminder: req.body.reminder,
         Difficulty: req.body.Difficulty,
         Private: req.body.Private,
+        encrypt: req.body.encrypt,
         Completion: req.body.Completion,
         UserID: res.locals.userid
     });
@@ -78,7 +79,6 @@ router.delete('/:taskId', validateCookie, async (req, res) => {
 router.patch('/:taskId', validateCookie, async (req, res) => {
     try {
         const tartask = await Task.findOne({ _id: req.params.taskId });
-        console.log(tartask.UserID)
         if (tartask.UserID !== res.locals.userid) return res.status(403).json("not authenticated")
 
         const updatedTask = await Task.updateOne({ _id: req.params.taskId }, {

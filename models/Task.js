@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 const TaskSchema = mongoose.Schema({
     text: {
-        type: String,
+        type: mongoose.Mixed,
         required: true
     },
     day: {
@@ -29,6 +29,10 @@ const TaskSchema = mongoose.Schema({
         type: Boolean,
         default: false
     },
+    encrypt: {
+        type: Boolean,
+        default: false
+    }
 });
 
 
