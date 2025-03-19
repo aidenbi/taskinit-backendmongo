@@ -56,7 +56,7 @@ router.post('/register', async (req, res) => {
 //logout
 router.get('/logout', async (req, res) => {
     try {
-        res.cookie('session_id', 0, { sameSite: 'none', secure: true, maxAge: 1 })
+        res.setHeader('Clear-Site-Data', '"cookies"');
         res.send({ msg: 'Logged out' })
     } catch (err) {
         res.json({ msg: err });
