@@ -18,8 +18,8 @@ const followingRoute = require('./routes/following');
 const authRoute = require('./routes/auth');
 
 app.use('/api/user', authRoute);
-app.use('/api/tasks', tasksRoute);
-app.use('/api/following', followingRoute);
+app.use('/tasks', tasksRoute);
+app.use('/following', followingRoute);
 
 
 
@@ -36,4 +36,6 @@ mongoose.connect(process.env.DB_CONNECTION, { useNewUrlParser: true }, () =>
 );
 
 //How do we start listening to the server
-app.listen(process.env.PORT || 3000);
+app.listen(3000);
+
+module.exports = app;
