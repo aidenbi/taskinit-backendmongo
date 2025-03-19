@@ -18,8 +18,8 @@ const followingRoute = require('./routes/following');
 const authRoute = require('./routes/auth');
 
 app.use('/api/user', authRoute);
-app.use('/tasks', tasksRoute);
-app.use('/following', followingRoute);
+app.use('/api/tasks', tasksRoute);
+app.use('/api/following', followingRoute);
 
 
 
