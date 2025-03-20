@@ -54,10 +54,11 @@ router.post('/register', async (req, res) => {
 
 
 //logout
-router.get('/logout', async (req, res) => {
+router.post('/logout', async (req, res) => {
     try {
-        res.setHeader('Clear-Site-Data', '"cookies"');
-        res.send({ msg: 'Logged out' })
+        console.log(req.cookies)
+        res.cookie('session_id', 'expired', { httpOnly: true, sameSite: 'none', secure: true, path: '/', expires: new Date(0) })
+        res.status(200).send({ msg: 'Logged out' })
     } catch (err) {
         res.json({ msg: err });
     }
@@ -65,6 +66,9 @@ router.get('/logout', async (req, res) => {
 
 //login
 router.post('/login', async (req, res) => {
+    res.setHeader("Access-Control-Allow-Origin", process.env.REACT_APP_CORS_LINK);
+    res.setHeader("Access-Control-Allow-Methods", "GET,POST,OPTIONS");
+    res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
     const cookies = req.cookies;
     const logincred = req.body
     if ('session_id' in cookies) {
@@ -85,7 +89,7 @@ router.post('/login', async (req, res) => {
         if (validPass === true || validnewPass === true) {
             //create and assign token
             const token = jwt.sign({ _id: user._id }, process.env.TOKEN_SECRET)
-            res.cookie('session_id', token, { sameSite: 'none', secure: true, maxAge: 900000 })
+            res.cookie('session_id', token, { sameSite: 'none', httpOnly: true, secure: true, expires: new Date(Date.now() + 1000 * 60 * 60 * 24), path: '/' })
             res.status(200).json(user)
         } else { res.status(400).send({ msg: 'Name or password is wrong' }) }
         if (validPass === true && validnewPass !== true) {
